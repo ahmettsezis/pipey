@@ -25,11 +25,15 @@ Bu proje, Azure DevOps pipeline'larını belirli tarih ve saatlerde tetiklemek v
 git clone <repository-url>
 cd pipey
 
+# appsettings.Test.json dosyanızı gerçek değerlerle doldurun (aşağıdaki Konfigürasyon bölümüne bakın)
+
 # Docker imajını build edin
 docker build -t pipeline-scheduler:test .
 
-# Container'ı çalıştırın
-docker run -p 5000:5000 -e AZURE_DEVOPS_PAT="YOUR_PAT_HERE" pipeline-scheduler:test
+# Konfigürasyon dosyasını read-only olarak container'a mount ederek çalıştırın
+docker run -p 5000:5000 \
+  -v "$(pwd)/appsettings.Test.json:/app/appsettings.Test.json:ro" \
+  pipeline-scheduler:test
 ```
 
 Uygulama http://localhost:5000 adresinde çalışacaktır.
@@ -37,10 +41,14 @@ Uygulama http://localhost:5000 adresinde çalışacaktır.
 ### 2. Kubernetes ile Deploy
 
 ```bash
-# Azure DevOps PAT'ınızı secret olarak oluşturun
-kubectl create secret generic azure-devops-pat --from-literal=pat='YOUR_PERSONAL_ACCESS_TOKEN'
+# appsettings.Test.json içeriğini hazırlayın (Konfigürasyon bölümündeki örneğe göre)
 
-# Deployment ve Service'i uygulayın
+# JSON'u secret olarak oluşturun
+kubectl create secret generic pipey-appsettings \
+  --from-file=appsettings.Test.json=./appsettings.Test.json
+
+# NOT: Deployment manifestinde bu secret'ı /app/appsettings.Test.json olarak mount etmeyi unutmayın
+# Ardından manifestleri uygulayın
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 
@@ -50,24 +58,54 @@ kubectl port-forward service/pipeline-scheduler-service 8080:80
 
 ## Konfigürasyon
 
-Aşağıdaki environment variable'ları kullanabilirsiniz:
+Uygulama sadece `appsettings.Test.json` dosyasından yapılandırma okur (ENV fallback kapalıdır).
 
-- `AZURE_DEVOPS_ORG_URL`: Azure DevOps organizasyon URL'i 
-- `AZURE_DEVOPS_PROJECT`: Proje adı 
-- `AZURE_DEVOPS_PAT`: Personal Access Token (zorunlu)
+Örnek JSON:
+
+```json
+{
+  "azureDevOps": {
+    "pat": "<PAT>",
+    "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/<org>/<collectionOrOrg>",
+    "AZURE_DEVOPS_PROJECT": "<ProjectName>"
+  }
+}
+```
+
+Notlar:
+- Placeholder değerler (ör. `YourVariable`) geçersiz sayılır.
+- PAT sağlanmışsa `AZURE_DEVOPS_ORG_URL` ve `AZURE_DEVOPS_PROJECT` zorunludur; eksikse uygulama başlangıçta hata ile durur (fail-fast).
+
+## Kimlik Doğrulama
+
+- Uygulama girişi zorunludur. Varsayılan olarak `app.py` içinde tanımlı geçici kullanıcılar kullanılır.
+- Örnek kullanıcı: `admin / password`
+- Production için kurumsal kimlik sağlayıcısı (OIDC/SAML) önerilir.
 
 ## API Endpoints
 
-- `GET /`: Ana sayfa
+- `GET /` (login required): Ana sayfa
 - `POST /schedule`: Pipeline zamanlama
 - `GET /jobs`: Zamanlanmış işlerin listesi
+- `GET /projects`: Projeler
+- `GET /pipelines?project=<name>`: Belirli proje için pipeline listesi (prod filtresi aktif)
+- `POST /refresh-projects`: Proje cache yenile
+- `POST /refresh-pipelines`: Pipeline cache yenile (body: `{ project: "..." }`)
+- `POST /cancel-job/<job_id>`: Zamanlanmış işi iptal et (Chained (Waiting) için de desteklenir)
+- `POST /chain`: Scheduled parent job'a chained iş ekle (max 5)
+- `GET /login`, `POST /login`: Giriş sayfası
+- `GET /logout`: Çıkış
 
 ## Kullanım
 
-1. Web arayüzünde Pipeline Definition ID'sini girin (örn: 584)
-2. Tetiklenmesini istediğiniz tarih ve saati seçin
-3. "Schedule" butonuna tıklayın
-4. İşin durumunu tabloda takip edin
+1. Web arayüzünde önce projeyi, sonra pipeline'ı seçin.
+   - Pipeline listesi yalnızca adında `prod` geçenleri gösterir (güvenlik filtresi).
+2. "Scheduled Run Time" alanında en az 2 dakika sonrası olacak şekilde bir zaman seçin.
+3. "Desktech ID" alanını pozitif tam sayı olarak doldurun.
+4. "Schedule" ile işi planlayın. Liste 5 saniyede bir otomatik güncellenir.
+5. İsteğe bağlı: Scheduled iş satırındaki "+Chain" ile en fazla 5 adet chained iş ekleyebilirsiniz.
+   - Chained (Waiting) işler parent başarıyla tamamlandığında otomatik tetiklenir.
+   - Chained (Waiting) işler ayrıca tek tek iptal edilebilir.
 
 ## Geliştirme
 
@@ -76,7 +114,7 @@ Aşağıdaki environment variable'ları kullanabilirsiniz:
 pip install -r requirements.txt
 
 # Development modunda çalıştırın
-python app.py
+python app.py  # appsettings.Test.json dosyanızın kökte mevcut olduğundan emin olun
 ```
 
 ## Teknolojiler
@@ -86,8 +124,3 @@ python app.py
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes
 - **Web Server**: Gunicorn
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
