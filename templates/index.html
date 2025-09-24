@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure DevOps Pipeline Scheduler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='pipeline-logo.svg') }}" alt="Pipeline Scheduler Logo" class="logo">
+        </div>
+        <div class="header-line">
+            <h1>Pipeline Scheduler</h1>
+            <div>
+                <span class="username">Welcome, {{ current_user.id }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                <button type="button" id="refresh-all" class="refresh-all-btn">🔄 Refresh All</button>
+            </div>
+        </div>
+        <div class="form-container">
+            <h2>Schedule a New Pipeline Run</h2>
+            <form id="schedule-form" novalidate>
+                <div class="form-group">
+                    <label for="project-select">Select Project:</label>
+                    <select id="project-select" name="project-select" required>
+                        <option value="">Loading projects...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pipeline-select">Select Pipeline:</label>
+                    <select id="pipeline-select" name="pipeline-select" required disabled>
+                        <option value="">First select a project...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="run-datetime">Scheduled Run Time:</label>
+                    <input type="datetime-local" id="run-datetime" name="run-datetime" novalidate required>
+                </div>
+                <div class="form-group">
+                    <label for="desktech-id">Desktech ID</label>
+                    <input type="number" id="desktech-id" name="desktech-id" inputmode="numeric" pattern="^[1-9]\\d*$" min="1" step="1" required>
+                </div>
+                <button type="submit">Schedule</button>
+            </form>
+            <div id="message-area"></div>
+        </div>
+
+        <div class="jobs-container">
+            <h2>Scheduled Jobs</h2>
+            <table id="jobs-table">
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Pipeline Name</th>
+                        <th>Scheduled Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Job rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <footer class="alien-footer">
+        developed with aliens and the devops team
+    </footer>
+</body>
+</html>

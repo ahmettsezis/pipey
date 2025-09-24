@@ -1,0 +1,344 @@
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    background: linear-gradient(-45deg, #0a2463, #3e92cc, #1e5f74, #2a628f);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+.logo {
+    max-height: 80px;
+    max-width: 300px;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    margin: 0 auto; /* center the panel horizontally */
+    transition: all 0.3s ease;
+}
+
+.container:hover {
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px);
+}
+
+h1, h2 {
+    color: #0a2463;
+    border-bottom: 2px solid rgba(62, 146, 204, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.header-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-line h1 {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.header-line > div {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Adds space between items */
+}
+
+.username {
+    font-weight: 600;
+    color: #4a5568; /* Softer dark gray */
+    font-size: 14px;
+}
+
+.logout-btn {
+    color: #2a628f;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.logout-btn:hover {
+    color: #3e92cc;
+}
+
+/* Clickable job/build links */
+.job-link {
+    color: #2a628f;
+    text-decoration: none;
+    font-weight: 600;
+}
+.job-link:hover {
+    color: #3e92cc;
+    text-decoration: underline;
+}
+
+.form-container {
+    margin-bottom: 40px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input[type="number"], input[type="datetime-local"], select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(42, 98, 143, 0.3);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+input[type="number"]:focus, input[type="datetime-local"]:focus, select:focus {
+    border-color: #3e92cc;
+    outline: none;
+    box-shadow: 0 2px 12px rgba(62, 146, 204, 0.2);
+}
+
+select {
+    background-color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%232a628f' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+.refresh-all-btn {
+    background: rgba(42, 98, 143, 0.1);
+    color: #0a2463;
+    border: 1px solid rgba(62, 146, 204, 0.3);
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.refresh-all-btn:hover {
+    background: rgba(62, 146, 204, 0.2);
+    color: #0a2463;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.refresh-all-btn:active {
+    transform: translateY(0);
+}
+
+button {
+    background-color: #2a628f;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #3e92cc;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#message-area {
+    margin-top: 15px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: none; /* Hidden by default */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#message-area.message-success,
+#message-area.message-error {
+    display: block !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-success {
+    background-color: rgba(46, 125, 50, 0.15);
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+    display: block;
+}
+
+.message-error {
+    background-color: rgba(198, 40, 40, 0.15);
+    color: #c62828;
+    border-left: 4px solid #c62828;
+    display: block;
+}
+
+.jobs-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.jobs-container th, .jobs-container td {
+    border: none;
+    padding: 14px;
+    text-align: left;
+}
+
+.jobs-container th {
+    background-color: rgba(42, 98, 143, 0.8);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.jobs-container tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.jobs-container tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.jobs-container tr:hover {
+    background-color: rgba(62, 146, 204, 0.1);
+}
+
+.status-scheduled {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.status-triggered {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.status-failed {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
+}
+
+.cancel-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.chain-btn {
+    background-color: #10b981; /* emerald */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 6px;
+    transition: background-color 0.3s;
+}
+
+.chain-btn:hover {
+    background-color: #059669;
+}
+
+.chain-btn:disabled {
+    background-color: #a7f3d0;
+    color: #065f46;
+    cursor: not-allowed;
+}
+
+/* Parent info shown under pipeline name for chained jobs */
+.parent-info {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6b7280; /* slate-500 */
+    font-style: italic;
+}
+
+.alien-footer {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    transition: color 0.5s ease;
+    z-index: 1000;
+}
+
+.alien-footer:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
